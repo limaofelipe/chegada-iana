@@ -16,22 +16,164 @@
         -webkit-backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.3);
       }
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translate3d(0, -20px, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+      .animate-fade-in-down {
+        animation: fadeInDown 1s ease-out;
+      }
+      /* Ensure text is readable on mobile */
+      @media (max-width: 640px) {
+        .glass {
+          padding: 1.5rem;
+        }
+      }
     </style>
   <script type="importmap">
 {
   "imports": {
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
-    "react/": "https://aistudiocdn.com/react@^19.2.1/",
     "react": "https://aistudiocdn.com/react@^19.2.1",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0"
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
-  <body>
-    <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+  <body class="min-h-screen bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600 flex flex-col items-center justify-center p-4 text-white relative overflow-hidden">
+    
+    <!-- Background Decor -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+      <div class="absolute top-10 left-10 w-32 h-32 bg-yellow-300 rounded-full mix-blend-overlay filter blur-3xl opacity-50 animate-pulse"></div>
+      <div class="absolute bottom-10 right-10 w-64 h-64 bg-blue-400 rounded-full mix-blend-overlay filter blur-3xl opacity-50"></div>
+    </div>
+
+    <div class="z-10 w-full max-w-3xl flex flex-col items-center gap-8">
+      
+      <!-- Header -->
+      <header class="text-center space-y-2 animate-fade-in-down">
+        <div class="inline-flex items-center gap-2 bg-white/20 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/30 shadow-lg mb-4">
+          <!-- MapPin Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-200"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span class="text-sm font-medium tracking-wide">Fortaleza, CE</span>
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold drop-shadow-md">
+          A Chegada da Iana
+        </h1>
+        <p class="text-lg md:text-xl text-white/90 font-light">
+          Contando os segundos para o reencontro hoje às 18:40
+        </p>
+      </header>
+
+      <!-- Timer Card -->
+      <div class="w-full glass rounded-3xl p-6 md:p-12 flex flex-col items-center justify-center shadow-2xl transition-transform hover:scale-[1.01] duration-300 relative min-h-[250px]">
+          <div class="absolute top-4 right-4">
+            <!-- Sun Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-300 opacity-80"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          </div>
+          
+          <div id="countdown-display" class="w-full flex flex-col items-center justify-center">
+            <div class="flex items-center gap-2 mb-6 opacity-80">
+               <!-- Clock Icon -->
+               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+               <span class="uppercase tracking-widest text-sm font-semibold">Tempo Restante</span>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-2 sm:gap-4 md:gap-8 text-center w-full max-w-full">
+              <!-- Hours -->
+              <div class="flex flex-col items-center">
+                <div class="bg-white/20 backdrop-blur-md rounded-xl p-2 sm:p-4 min-w-[60px] sm:min-w-[90px] md:min-w-[120px] shadow-inner border border-white/10">
+                  <span id="hours" class="text-2xl sm:text-4xl md:text-7xl font-bold font-mono">00</span>
+                </div>
+                <span class="text-[10px] sm:text-xs md:text-sm mt-2 uppercase tracking-wider font-medium">Horas</span>
+              </div>
+
+              <div class="text-2xl sm:text-4xl md:text-6xl font-bold self-start mt-2 sm:mt-4 opacity-50 hidden sm:block">:</div>
+
+              <!-- Minutes -->
+              <div class="flex flex-col items-center">
+                <div class="bg-white/20 backdrop-blur-md rounded-xl p-2 sm:p-4 min-w-[60px] sm:min-w-[90px] md:min-w-[120px] shadow-inner border border-white/10">
+                  <span id="minutes" class="text-2xl sm:text-4xl md:text-7xl font-bold font-mono">00</span>
+                </div>
+                <span class="text-[10px] sm:text-xs md:text-sm mt-2 uppercase tracking-wider font-medium">Minutos</span>
+              </div>
+
+              <div class="text-2xl sm:text-4xl md:text-6xl font-bold self-start mt-2 sm:mt-4 opacity-50 hidden sm:block">:</div>
+
+              <!-- Seconds -->
+              <div class="flex flex-col items-center">
+                <div class="bg-white/20 backdrop-blur-md rounded-xl p-2 sm:p-4 min-w-[60px] sm:min-w-[90px] md:min-w-[120px] shadow-inner border border-white/10">
+                  <span id="seconds" class="text-2xl sm:text-4xl md:text-7xl font-bold font-mono">00</span>
+                </div>
+                <span class="text-[10px] sm:text-xs md:text-sm mt-2 uppercase tracking-wider font-medium">Segundos</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="expired-message" class="hidden text-center animate-bounce">
+            <!-- Party Popper Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-yellow-300"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11v0c-.11.7-.72 1.22-1.43 1.22h-.52c-.72 0-1.36.53-1.48 1.25l-.28 1.73a2.9 2.9 0 0 0 2.98 3.39h0c.91 0 1.65-.75 1.65-1.66V19a2.9 2.9 0 0 1 2.9-2.9h0c.91 0 1.65-.75 1.65-1.66V13z"/></svg>
+            <h2 class="text-3xl font-bold mb-2">Ela Chegou!</h2>
+            <p class="text-xl opacity-90">Bem-vinda a Fortaleza, Iana!</p>
+          </div>
+
+      </div>
+
+      <!-- Footer -->
+      <footer class="mt-8 text-white/60 text-sm">
+        <p>Feito com ❤️ esperando a Iana</p>
+      </footer>
+    </div>
+
+    <script>
+      const updateCountdown = () => {
+        const now = new Date();
+        const target = new Date(now);
+        // Set target to today at 18:40 (6:40 PM)
+        target.setHours(18, 40, 0, 0);
+        
+        const difference = target.getTime() - now.getTime();
+        
+        const countdownDisplay = document.getElementById('countdown-display');
+        const expiredMessage = document.getElementById('expired-message');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+
+        if (!countdownDisplay || !expiredMessage || !hoursEl || !minutesEl || !secondsEl) return;
+
+        // If time has passed today, show expired message
+        if (difference <= 0) {
+          countdownDisplay.classList.add('hidden');
+          expiredMessage.classList.remove('hidden');
+          return;
+        } else {
+            countdownDisplay.classList.remove('hidden');
+            expiredMessage.classList.add('hidden');
+        }
+
+        const hours = Math.floor((difference / (1000 * 60 * 60)));
+        const minutes = Math.floor((difference / 1000 / 60) % 60);
+        const seconds = Math.floor((difference / 1000) % 60);
+
+        hoursEl.innerText = String(hours).padStart(2, '0');
+        minutesEl.innerText = String(minutes).padStart(2, '0');
+        secondsEl.innerText = String(seconds).padStart(2, '0');
+      };
+
+      document.addEventListener('DOMContentLoaded', () => {
+        // Initial call
+        updateCountdown();
+        // Update every second
+        setInterval(updateCountdown, 1000);
+      });
+    </script>
+  </body>
 </html>
